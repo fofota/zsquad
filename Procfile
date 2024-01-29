@@ -1,1 +1,1 @@
-web: python app3.py
+web: gunicorn app3:app
