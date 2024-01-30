@@ -1,5 +1,7 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import pandas as pd
+import os
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -55,8 +57,23 @@ def player_page(name):
 
     return render_template('player.html', name=name, player_df=player_df, player_table=player_html)
 
+# Additional route to trigger data update
+@app.route('/update_data', methods=['GET'])
+def update_data():
+    global full_df
+
+    # Check if the timestamp parameter is present in the request
+    timestamp = request.args.get('timestamp', type=int)
+    
+    # If the timestamp is different, update the DataFrame
+    if timestamp and timestamp != current_timestamp:
+        current_timestamp = timestamp
+        full_df = pd.read_csv('https://zupload1015.s3.eu-north-1.amazonaws.com/parsed_data.csv')
+
+    return jsonify({"status": "success"})
 
 if __name__ == '__main__':
+    current_timestamp = int(datetime.timestamp(datetime.now()))
     app.run(debug=True, threaded=True, use_reloader=True)
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
