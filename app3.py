@@ -40,6 +40,7 @@ def index():
 
     # Replace NaN values in the 'Inf' and personality columns with an empty string
     df['Inf'] = df['Inf'].fillna('')
+    df['Salary'] = df['Salary'].fillna('')
     df['Personality'] = df['Personality'].fillna('')
 
     return render_template('index.html', table=df.sort_values(by='MappedPosition'))
