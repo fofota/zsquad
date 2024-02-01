@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 
 app = Flask(__name__)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 # Read the CSV file into a pandas DataFrame
 full_df = pd.read_csv('https://zupload1015.s3.eu-north-1.amazonaws.com/parsed_data.csv')
@@ -34,7 +35,7 @@ def index():
     # Sort the DataFrame by 'MappedPosition'
     
     # Select specific columns
-    selected_columns = ['MappedPosition','Inf', 'Name', 'Age', 'Wage', 'Transfer Value', 'Nationality', 'Position', 'Personality', 'Av Rat', 'Mins', 'Gls', 'Ast', 'NP-xG/90', 'xA/90']
+    selected_columns = ['MappedPosition','Inf', 'Name', 'Age', 'Salary', 'Transfer Value', 'Nationality', 'Position', 'Personality', 'Av Rat', 'Mins', 'Gls', 'Ast', 'NP-xG/90', 'xA/90']
     df = full_df[selected_columns]
 
     # Replace NaN values in the 'Inf' and personality columns with an empty string
@@ -56,24 +57,7 @@ def player_page(name):
     player_html = player_df.to_html(classes='table table-dark', index=False)
 
     return render_template('player.html', name=name, player_df=player_df, player_table=player_html)
-
-# Additional route to trigger data update
-@app.route('/update_data', methods=['GET'])
-def update_data():
-    global full_df
-
-    # Check if the timestamp parameter is present in the request
-    timestamp = request.args.get('timestamp', type=int)
     
-    # If the timestamp is different, update the DataFrame
-    if timestamp and timestamp != current_timestamp:
-        current_timestamp = timestamp
-        full_df = pd.read_csv('https://zupload1015.s3.eu-north-1.amazonaws.com/parsed_data.csv')
-
-    return jsonify({"status": "success"})
-
 if __name__ == '__main__':
-    current_timestamp = int(datetime.timestamp(datetime.now()))
     app.run(debug=True, threaded=True, use_reloader=True)
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)

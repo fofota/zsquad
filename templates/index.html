@@ -45,7 +45,7 @@
                         <th>Inf</th>
                         <th>Name</th>
                         <th>Age</th>
-                        <th>Wage</th>
+                        <th>Salary</th>
                         <th>Transfer Value</th>
                         <th>Nat</th>
                         <th>Position</th>
@@ -64,7 +64,7 @@
                             <td>{{ row[1]['Inf'] }}</td>
                             <td><a href="{{ url_for('player_page', name=row[1]['Name']) }}">{{ row[1]['Name'] }}</a></td>
                             <td>{{ row[1]['Age'] }}</td>
-                            <td>{{ row[1]['Wage'] }}</td>
+                            <td>{{ row[1]['Salary'] }}</td>
                             <td>{{ row[1]['Transfer Value'] }}</td>
                             <td>{{ row[1]['Nationality'] }}</td>
                             <td>{{ row[1]['Position'] }}</td>
@@ -79,6 +79,8 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <p>Current_timestamp: to come</p>
+            <p>timestamp: {{ timestamp }}</p>
         </div>
     </div>
 
